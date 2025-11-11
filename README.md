@@ -37,4 +37,11 @@ A web application built using Node.js and Express to interact with the Spotify W
     The application should start on `http://localhost:8888`.
 
 ## 📌 Usage
-[Describe how a user would interact with your application here.]
+    Set up Spotify app and connect
+    Load your playlists
+    Adjust tempo ranges if desired (optional)
+    Click "Analyze Tracks" to see the preview
+    Review the preview carefully
+    Only when satisfied, click "Create These Playlists on Spotify"
+
+    The tool is completely safe - it only reads your existing playlists and creates new organized ones. Your original playlists stay exactly as they are!
