@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Spotify Playlist Organizer - Tempo</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>🥁 Spotify Tempo Organizer</h1>
+                <p>Organize your music by tempo (BPM) - Safe testing mode</p>
+            </div>
+
+            <div class="auth-section">
+                <div id="login-section">
+                    <h2>Connect to Spotify</h2>
+                    <p>To get started, you'll need to:</p>
+                    <ol style="text-align: left; max-width: 600px; margin: 20px auto;">
+                        <li>Create a Spotify app at <a href="https://developer.spotify.com/dashboard" target="_blank"
+                                style="color: #1db954;">developer.spotify.com</a></li>
+                        <li>Add your redirect URI (this page's URL) to your app settings</li>
+                        <li>Copy your Client ID below</li>
+                    </ol>
+                    <input type="text" id="clientId" placeholder="Enter your Spotify Client ID"
+                        style="padding: 10px; margin: 10px; border-radius: 5px; border: none; width: 300px;">
+                    <br>
+                    <button class="btn" onclick="login()">Connect to Spotify</button>
+                </div>
+
+                <div id="user-section" style="display: none;">
+                    <h2>Welcome, <span id="username"></span>!</h2>
+                    <button class="btn" onclick="logout()">Disconnect</button>
+                </div>
+            </div>
+
+            <div class="warning" id="testWarning" style="display: none;">
+                <h3>⚠️ Test Mode Active</h3>
+                <p>This tool will only PREVIEW how your tracks would be organized. You must explicitly click "Create
+                    Playlists" to actually create them on Spotify.</p>
+                <p><strong>Your existing playlists will NOT be modified.</strong></p>
+            </div>
+
+            <div class="status" id="status">
+                <div class="loading">Processing...</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress"></div>
+                </div>
+                <div id="status-text"></div>
+            </div>
+
+            <div class="main-content" id="main-content" style="display: none;">
+                <div class="section">
+                    <h2>Your Playlists</h2>
+                    <div id="playlists-list">
+                        <button class="btn" onclick="loadPlaylists()">Load My Playlists</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Tempo Settings</h2>
+                    <div class="tempo-settings">
+                        <h3>Configure BPM Ranges</h3>
+
+                        <div class="tempo-category">
+                            <label>Slow (Ballads, Chill)</label>
+                            <input type="range" class="range-input" id="slowMax" min="60" max="100" value="90"
+                                oninput="updateRangeDisplay()">
+                            <div class="range-values">
+                                <span>60 BPM</span>
+                                <span id="slowMaxDisplay">90 BPM</span>
+                            </div>
+                        </div>
+
+                        <div class="tempo-category">
+                            <label>Medium (Pop, Rock)</label>
+                            <div class="range-values">
+                                <span id="mediumMinDisplay">90 BPM</span>
+                                <span>-</span>
+                                <span id="mediumMaxDisplay">130 BPM</span>
+                            </div>
+                            <input type="range" class="range-input" id="mediumMax" min="100" max="150" value="130"
+                                oninput="updateRangeDisplay()">
+                            <div class="range-values">
+                                <span></span>
+                                <span id="mediumMaxDisplay2">130 BPM</span>
+                            </div>
+                        </div>
+
+                        <div class="tempo-category">
+                            <label>Fast (Dance, Electronic)</label>
+                            <div class="range-values">
+                                <span id="fastMinDisplay">130 BPM</span>
+                                <span>- 200+ BPM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn" id="analyzeBtn" onclick="analyzeMusic()" disabled>Analyze Tracks</button>
+                </div>
+            </div>
+
+            <div class="section" id="preview-section" style="display: none; grid-column: 1 / -1;">
+                <h2>Preview - How Your Tracks Will Be Organized</h2>
+                <div class="preview-section" id="preview-content"></div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn-secondary btn" onclick="cancelOrganization()">Cancel</button>
+                    <button class="btn" onclick="createPlaylists()">Create These Playlists on Spotify</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="js/script.js"></script>
+    </body>
+
+</html>
