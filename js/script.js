@@ -1,11 +1,14 @@
 // Spotify API configuration
+let code = '';
 let accessToken = '';
 let userPlaylists = [];
 let allTracks = [];
 let organizedTracks = {};
 
-const REDIRECT_URI = window.location.origin + window.location.pathname;
+const REDIRECT_URI = "http://127.0.0.1:5500/index.html";
 const SCOPES = 'playlist-read-private playlist-modify-private playlist-modify-public';
+const CLIENT_SECRET = '18e8103ffc744320857132c22358a0a2';
+const clientId = '8e25f9767f294500a665de6dfdaecc37';
 
 // Tempo settings
 let tempoRanges = {
@@ -16,19 +19,17 @@ let tempoRanges = {
 
 // Authentication functions
 function login() {
-    const clientId = document.getElementById('clientId').value;
-    if (!clientId) {
+    const Id = document.getElementById('clientId').value;
+    if (!Id) {
         alert('Please enter your Spotify Client ID first!');
         return;
     }
-
     const params = new URLSearchParams({
-        client_id: clientId,
-        response_type: 'token',
+        client_id: Id,
+        response_type: 'code',
         redirect_uri: REDIRECT_URI,
         scope: SCOPES
     });
-
     window.location.href = `https://accounts.spotify.com/authorize?${params}`;
 }
 
@@ -42,19 +43,35 @@ function logout() {
 }
 
 // Check for access token in URL
-function checkForToken() {
-    const hash = window.location.hash.substring(1);
-    const params = new URLSearchParams(hash);
-    const token = params.get('access_token');
-
-    if (token) {
-        accessToken = token;
+async function checkForToken() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const codeParam = urlParams.get('code');
+    accessToken = await getAccessToken(codeParam);
+    if (codeParam) {
+        code = codeParam;
         window.location.hash = ''; // Clear the hash
         loadUserProfile();
     }
 }
 
 // API functions
+
+async function getAccessToken(code) {
+    const response = await fetch("http://localhost:3001/api/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            code,
+            redirectUri: REDIRECT_URI,
+            clientId: clientId,
+            clientSecret: CLIENT_SECRET
+        })
+    });
+
+    const data = await response.json();
+    return data.access_token;
+}
+
 async function apiCall(endpoint, options = {}) {
     const response = await fetch(`https://api.spotify.com/v1${endpoint}`, {
         headers: {
